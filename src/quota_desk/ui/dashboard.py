@@ -1,4 +1,4 @@
-"""Plain native UI for the local account dashboard."""
+"""Native desktop interface for Quota Desk."""
 import json
 import os
 import queue
@@ -8,8 +8,6 @@ from tkinter import ttk, messagebox, filedialog
 
 from ..commands import launch_operation
 
-AUTO_REFRESH_MS = 60_000
-
 
 class QuotaDashboard:
     def __init__(self, root, backend, provider='agy'):
@@ -17,11 +15,11 @@ class QuotaDashboard:
         self.results = queue.Queue()
         self.pages = {}
         self.closed = False
-        root.title('Quota Desk · 朴素版' + (' · 离线演示' if backend.DEMO else ''))
+        root.title('Quota Desk' + (' · 离线演示' if backend.DEMO else ''))
         scale = root.winfo_fpixels('1i') / 96
         root.minsize(round(780 * scale), round(580 * scale))
         root.configure(bg='#F4F5F6')
-        icon = backend.SIMPLE_ICON_PATH
+        icon = backend.DASHBOARD_ICON_PATH
         if os.path.exists(icon):
             root.iconbitmap(icon)
         style = ttk.Style(root)

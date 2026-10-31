@@ -14,12 +14,12 @@ from .config import Settings
 def parser():
     p = argparse.ArgumentParser(description="Quota Desk — Antigravity / Codex 额度与账号看板")
     p.add_argument("--version", action="version", version=__version__)
-    p.add_argument("--simple", action="store_true", help="打开朴素版（默认经典版）")
+    p.add_argument("--simple", action="store_true", help=argparse.SUPPRESS)
     p.add_argument("--demo", action="store_true", help="完全离线的演示模式，不读取或更改真实账号")
     p.add_argument("--cli", action="store_true", help="在终端查看额度")
     p.add_argument("--data-dir", type=Path, help="独立数据目录（默认 LOCALAPPDATA/QuotaDesk）")
     p.add_argument("--refresh-seconds", type=int, choices=range(30, 3601), metavar="30..3600")
-    p.add_argument("--install-shortcuts", action="store_true", help="创建经典版与朴素版桌面快捷方式")
+    p.add_argument("--install-shortcuts", action="store_true", help="创建桌面快捷方式")
     p.add_argument("--diagnostics", action="store_true", help="输出不含账号、邮箱和令牌的本机诊断摘要")
     sub = p.add_subparsers(dest="command")
     account = sub.add_parser("account", help="显式管理本地账号")
@@ -36,18 +36,14 @@ def parser():
     return p
 
 
-def launch_gui(q, simple=False):
+def launch_gui(q):
     import tkinter as tk
     if os.name == "nt":
         try:
             ctypes.windll.shcore.SetProcessDpiAwareness(2)
         except OSError:
             pass
-    if not simple:
-        from .ui.classic import launch_gui as classic
-        classic()
-        return
-    from .ui.plain import QuotaDashboard
+    from .ui.dashboard import QuotaDashboard
     root = tk.Tk()
     app = QuotaDashboard(root, q)
     scale = root.winfo_fpixels("1i") / 96
@@ -114,7 +110,7 @@ def main(argv=None):
         elif args.cli:
             q.print_cli_report()
         else:
-            launch_gui(q, args.simple)
+            launch_gui(q)
         return 0
     except (OSError, ValueError, RuntimeError, TimeoutError) as exc:
         if sys.stderr is not None:

@@ -27,8 +27,7 @@ from .storage import AccountStore
 from .windows import operation_lock
 
 ASSETS_DIR = Path(__file__).parent / "assets"
-DASHBOARD_ICON_PATH = str(ASSETS_DIR / "quota_dashboard.ico")
-SIMPLE_ICON_PATH = str(ASSETS_DIR / "quota_dashboard_simple.ico")
+DASHBOARD_ICON_PATH = str(ASSETS_DIR / "quota_desk.ico")
 PYTHONW_EXE = str(Path(sys.executable).with_name("pythonw.exe"))
 if not Path(PYTHONW_EXE).exists():
     PYTHONW_EXE = sys.executable

@@ -15,13 +15,10 @@ def install(backend):
     folder = ctypes.create_unicode_buffer(32768)
     if ctypes.windll.shell32.SHGetFolderPathW(None, 0x10, None, 0, folder) != 0:
         raise OSError("无法定位桌面目录。")
-    commands = []
-    for simple in (False, True):
-        command = helper_command(backend, *(('--simple',) if simple else ()))
-        commands.append({"name": "Quota Desk（朴素版）" if simple else "Quota Desk",
-                         "target": command[0], "args": subprocess.list2cmdline(command[1:]),
-                         "icon": backend.SIMPLE_ICON_PATH if simple else backend.DASHBOARD_ICON_PATH,
-                         "folder": folder.value})
+    command = helper_command(backend)
+    commands = [{"name": "Quota Desk", "target": command[0],
+                 "args": subprocess.list2cmdline(command[1:]),
+                 "icon": backend.DASHBOARD_ICON_PATH, "folder": folder.value}]
     blob = base64.b64encode(json.dumps(commands, ensure_ascii=False).encode()).decode()
     powershell("$data=ConvertFrom-Json([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('" + blob + "'))); "
                "$shell=New-Object -ComObject WScript.Shell; foreach($item in $data){ "

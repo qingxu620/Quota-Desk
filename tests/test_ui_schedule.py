@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 from unittest.mock import Mock
 
-from quota_desk.ui.plain import QuotaDashboard
+from quota_desk.ui.dashboard import QuotaDashboard
 
 
 def test_timer_refreshes_both_pages_and_reschedules_at_configured_interval():

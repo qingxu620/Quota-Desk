@@ -4,15 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "quota-desk"
-version = "0.1.0a1"
+version = "0.2.0"
 description = "A local Windows dashboard for Antigravity and Codex quotas and accounts"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [{name = "Quota Desk contributors"}]
-dependencies = ["Pillow>=10"]
+dependencies = []
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Operating System :: Microsoft :: Windows",
   "Programming Language :: Python :: 3",
   "Topic :: Utilities",
@@ -31,7 +31,7 @@ quota-desk-gui = "quota_desk.__main__:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-quota_desk = ["assets/*.ico", "assets/*.png"]
+quota_desk = ["assets/*.ico"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

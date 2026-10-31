@@ -1,1 +1,1 @@
-"""Classic and plain desktop interfaces."""
+"""Quota Desk desktop interface."""

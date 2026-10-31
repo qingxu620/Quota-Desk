@@ -2,13 +2,13 @@
 
 一个 Windows 桌面额度看板，集中查看 Antigravity 和 Codex 多个账号的剩余额度，并切换客户端账号。
 
-目前是 **0.1.0 Alpha**。源码托管于 [GitHub](https://github.com/qingxu620/Quota-Desk)，可以在本地安装、运行和测试，尚未发布到 PyPI。
+当前版本是 **0.2.0**，主线仅保留原朴素界面作为正式界面。源码托管于 [GitHub](https://github.com/qingxu620/Quota-Desk)，可以在本地安装、运行和测试，尚未发布到 PyPI。
 
 ## 能做什么
 
-- **两种界面**：经典版同时展示两种服务；朴素版分为 Antigravity、Codex 两页。
+- **独立服务页面**：Antigravity、Codex 分为两页，界面简洁。
 - **多账号管理**：保存或更新当前登录账号、导入已有账号文件、登录绑定新账号，数量不限于三个。
-- **每 60 秒后台刷新**：朴素版同时刷新两页；切页使用已有数据，F5 可手动刷新。
+- **每 60 秒后台刷新**：同时刷新两页；切页使用已有数据，F5 可手动刷新。
 - **区分真实状态**：实时额度、Argon 历史记录、过期记录和查询失败分别显示，未知值不会当作满额。
 - **本地保存**：账号凭证使用 Windows DPAPI 加密。数据默认放在 `%LOCALAPPDATA%\QuotaDesk`，与源码分开。
 - **离线演示**：不用登录，不读取真实账号，也不请求额度接口。
@@ -27,19 +27,16 @@ python -m venv .venv
 先打开离线演示：
 
 ```powershell
-.\.venv\Scripts\python.exe -m quota_desk --demo --simple
+.\.venv\Scripts\python.exe -m quota_desk --demo
 ```
 
 正常使用：
 
 ```powershell
-# 经典版
+# 打开看板
 .\.venv\Scripts\python.exe -m quota_desk
 
-# 朴素版
-.\.venv\Scripts\python.exe -m quota_desk --simple
-
-# 创建两种界面的独立桌面快捷方式
+# 创建桌面快捷方式
 .\.venv\Scripts\python.exe -m quota_desk --install-shortcuts
 ```
 
@@ -47,7 +44,7 @@ python -m venv .venv
 
 ## 添加和切换账号
 
-朴素版中选择对应服务，点击 **「+ 新增账号」**：
+窗口中选择对应服务，点击 **「+ 新增账号」**：
 
 1. **保存 / 更新当前登录账号**：先在对应官方客户端登录，再保存到看板。相同身份更新凭证，不会重复添加。
 2. **从账号文件导入**：支持原始登录凭证 JSON，以及旧看板带 `cred` 或 `auth` 字段的 `accN.json`。导入后在本地加密保存。
@@ -55,7 +52,7 @@ python -m venv .venv
 
 切换账号会请求客户端正常关闭，写入目标账号后再启动。客户端未退出时不会替换账号；登录超时或启动失败会尝试恢复原账号。正在执行任务时，请先处理客户端中的工作再切换。
 
-经典版按 **F6** 打开朴素版管理账号，账号较多时按 **PgUp / PgDn** 翻页。
+账号较多时可在当前页面滚动查看。
 
 ## 其他用法
 
@@ -66,10 +63,10 @@ python -m venv .venv
 python -m quota_desk --cli
 
 # 临时调整刷新间隔（30 到 3600 秒）
-python -m quota_desk --simple --refresh-seconds 90
+python -m quota_desk --refresh-seconds 90
 
 # 使用独立数据目录
-python -m quota_desk --data-dir "D:\QuotaDeskData" --simple
+python -m quota_desk --data-dir "D:\QuotaDeskData"
 
 # 保存当前账号；agy 表示 Antigravity
 python -m quota_desk account import-current agy --name "我的账号"
@@ -106,3 +103,7 @@ python -m pytest -q
 ## 许可
 
 [MIT](LICENSE) · Quota Desk contributors
+
+## 初代版本
+
+[初代经典版归档](https://github.com/qingxu620/Quota-Desk/releases/tag/v0.1.0-classic)保留历史源码供下载和回溯，主线不再包含经典界面代码与旧图标。旧命令中的 `--simple` 参数仍可兼容使用。
