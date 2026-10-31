@@ -1,0 +1,15 @@
+[app]
+refresh_seconds = 60
+
+# Defaults discover the usual per-user Windows client locations.
+[clients]
+# codex_auth_path = 'C:\Users\YOUR_USER\.codex\auth.json'
+# antigravity_exe = 'C:\Users\YOUR_USER\AppData\Local\Programs\antigravity\Antigravity.exe'
+# codex_launch = ['explorer.exe', 'shell:AppsFolder\OpenAI.Codex_2p2nqsd0c76g0!App']
+# codex_process_names = ['ChatGPT.exe']
+
+# Optional. Must match the OAuth client that issued the imported refresh token.
+# Keep real values in the local data directory, never in this repository.
+[oauth]
+google_client_id = ""
+google_client_secret = ""
