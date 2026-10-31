@@ -37,6 +37,9 @@ def parser():
 
 
 def launch_gui(q):
+    from .tray import reveal_existing
+    if not q.DEMO and reveal_existing(q.SETTINGS.home):
+        return
     import tkinter as tk
     if os.name == "nt":
         try:

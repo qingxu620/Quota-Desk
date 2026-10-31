@@ -2,7 +2,7 @@
 
 一个 Windows 桌面额度看板，集中查看 Antigravity 和 Codex 多个账号的剩余额度，并切换客户端账号。
 
-当前版本是 **0.3.0**，主线仅保留原朴素界面作为正式界面。源码托管于 [GitHub](https://github.com/qingxu620/Quota-Desk)，可以在本地安装、运行和测试，尚未发布到 PyPI。
+当前版本是 **0.3.1**，主线仅保留原朴素界面作为正式界面。源码托管于 [GitHub](https://github.com/qingxu620/Quota-Desk)，可以在本地安装、运行和测试，尚未发布到 PyPI。
 
 ## 能做什么
 
