@@ -1,5 +1,6 @@
 """Offline, deterministic demo data; no tokens, credential access, or network calls."""
 from datetime import datetime
+import time
 
 
 def provider_data(provider):
@@ -19,9 +20,14 @@ def provider_data(provider):
                     dict(label="Codex · 7天周度总池", pct=90-n*17, reset="4天08小时后重置")]
             chips = [("neutral", "离线演示数据"), ("ok", "速率状态: 正常")]
             pct, ring = min(b["pct"] for b in bars), "CODEX"
-        items.append(dict(provider=provider, slot=str(n), alias=label,
+        windows = [dict(id=str(index), label=bar["label"], pct=bar["pct"],
+                        source="cache" if provider == "agy" and "Argon" in bar["label"] and not active else "live",
+                        reset_at=time.time() + n * 3600 + index * 86400)
+                   for index, bar in enumerate(b for group in bars for b in group.get("split", [group]))]
+        items.append(dict(provider=provider, slot=str(n), alias=label, group=["个人", "工作", ""][n-1],
                           email=f"{provider}{n}@example.test", plan="DEMO", bound=True,
                           is_active=active, accent="#A78BFA" if provider == "agy" else "#38BDF8",
-                          error=None, ring_pct=pct, ring_label=ring, bars=bars, sub_chips=chips))
+                          error=None, ring_pct=pct, ring_label=ring, bars=bars, sub_chips=chips,
+                          quota_windows=windows))
     return {provider: items, "local_ok": False, "elapsed": 0.0,
             "timestamp": datetime.now().strftime("%H:%M:%S")}

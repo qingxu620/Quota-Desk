@@ -148,7 +148,7 @@ class Provider:
         identity, email, plan = self.metadata(current)
         if not email:
             return None
-        payload = dict(slot=idx, alias=existing.get("alias") or email.split("@")[0],
+        payload = dict(existing, slot=idx, alias=existing.get("alias") or email.split("@")[0],
                        email=email, plan=plan, **{self.key: current})
         if self.kind == "agy":
             payload["sub"] = identity

@@ -437,6 +437,14 @@ def build_agy_item(raw, local_ls, cache):
     if raw["error"] and not live_local:
         chips = [("warn", f"接口提示: {raw['error']}")] + chips[2:]
     item["sub_chips"] = chips
+    item["quota_windows"] = [
+        dict(id=bid, label=label, pct=pct_of(bid),
+             source=argon_src if bid == ARGON_BID else "live",
+             reset_at=iso_to_epoch((buckets.get(bid) or {}).get("reset")))
+        for bid, label in ((ARGON_BID, "Argon 周"), ("gemini-5h", "Gemini 5小时"),
+                           ("gemini-weekly", "Gemini 周"), ("3p-5h", "Claude/GPT 5小时"),
+                           ("3p-weekly", "Claude/GPT 周"))
+    ]
     return item
 
 
@@ -534,7 +542,17 @@ def fetch_codex_slot_quota(slot_idx, active_idx):
         "provider": "codex", "slot": str(slot_idx), "alias": alias, "accent": accent,
         "bound": True, "is_active": is_active, "email": email, "plan": plan, "error": err,
         "ring_pct": ring, "ring_label": "CODEX", "bars": bars, "sub_chips": chips,
+        "quota_windows": [
+            dict(id=key, label=label, pct=pct, source="live",
+                 reset_at=time.time() + window["reset_after_seconds"] if window.get("reset_after_seconds") is not None else None)
+            for key, label, pct, window in (("5h", "5小时窗口", rem_5h, w5h), ("weekly", "周额度", rem_7d, w7d))
+        ] if not err else [],
     }
+
+
+def launch_operation(backend, provider, slot, bind=False):
+    from .commands import launch_operation as launch
+    return launch(backend, provider, slot, bind=bind)
 
 
 def provider_switcher(provider):
