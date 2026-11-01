@@ -14,7 +14,7 @@ def default_home():
 @dataclass
 class Settings:
     home: Path = field(default_factory=default_home)
-    refresh_seconds: int = 60
+    refresh_seconds: int = 180
     codex_auth_path: Path = field(default_factory=lambda: Path(os.environ.get("CODEX_HOME", Path.home() / ".codex")) / "auth.json")
     antigravity_exe: Path = field(default_factory=lambda: Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData/Local")) / "Programs/antigravity/Antigravity.exe")
     codex_launch: list[str] = field(default_factory=lambda: ["explorer.exe", r"shell:AppsFolder\OpenAI.Codex_2p2nqsd0c76g0!App"])
@@ -32,7 +32,7 @@ class Settings:
         with path.open("rb") as f:
             doc = tomllib.load(f)
         app = doc.get("app", {})
-        settings.refresh_seconds = int(app.get("refresh_seconds", 60))
+        settings.refresh_seconds = int(app.get("refresh_seconds", settings.refresh_seconds))
         if not 30 <= settings.refresh_seconds <= 3600:
             raise ValueError("refresh_seconds 必须在 30 到 3600 秒之间。")
         clients = doc.get("clients", {})

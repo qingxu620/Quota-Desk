@@ -1,5 +1,5 @@
 [app]
-refresh_seconds = 60
+refresh_seconds = 180
 
 # Defaults discover the usual per-user Windows client locations.
 [clients]

@@ -477,15 +477,8 @@ def fetch_codex_slot_quota(slot_idx, active_idx):
     auth_obj = acc_data["auth"]
     tokens = auth_obj.get("tokens", {})
 
-    try:
-        exp = codex_sw.get_jwt_payload(tokens.get("access_token", "")).get("exp", 0)
-        if exp > 0 and (exp - time.time() < 3600):
-            ok, _ = codex_sw.refresh_openai_token(tokens)
-            if ok:
-                codex_sw.write_json_atomic(os.path.join(CODEX_DIR, f"acc{slot_idx}.json"), acc_data)
-                codex_sw.sync_current_if_matches(auth_obj)
-    except Exception:
-        pass
+    # The official client owns OAuth renewal. A quota read must never rotate a
+    # copied refresh token or replace credentials behind a running client's back.
 
     headers = {
         "Authorization": f"Bearer {tokens.get('access_token', '')}",

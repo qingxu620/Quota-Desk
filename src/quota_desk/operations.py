@@ -64,11 +64,9 @@ class AccountOperations:
             if expiry - time.time() < 300 and not sw.refresh_google_oauth_token(auth):
                 raise ValueError("该账号凭证已过期。请先在客户端重新登录并保存当前账号；或配置匹配的 OAuth 客户端信息。")
         else:
-            expiry = sw.get_jwt_payload(auth["tokens"]["access_token"]).get("exp", 0)
-            if expiry and expiry - time.time() < 300:
-                success, _ = sw.refresh_openai_token(auth["tokens"])
-                if not success:
-                    raise ValueError("该账号登录状态需要更新；请在客户端重新登录后保存。")
+            # Codex renews its own login after startup. Rotating a copied refresh
+            # token here could invalidate another managed client session.
+            return
 
     @staticmethod
     def _wait_for_login(sw, slot, timeout):

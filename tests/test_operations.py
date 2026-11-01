@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 
 from quota_desk.operations import AccountOperations
-from conftest import add, auth
+from conftest import add, auth, token
 
 
 def setup_operation(app, monkeypatch):
@@ -90,3 +90,17 @@ def test_process_matching_does_not_target_unrelated_codex_or_python(app):
     assert not controller._matches({"Name": "codex.exe", "ExecutablePath": r"C:\Tools\codex.exe"})
     assert not controller._matches({"Name": "python.exe", "ExecutablePath": r"C:\Python\python.exe"})
     assert controller._matches({"Name": "ChatGPT.exe", "ExecutablePath": r"C:\Program Files\WindowsApps\OpenAI.Codex_1\app\ChatGPT.exe"})
+
+
+def test_switch_leaves_oauth_renewal_to_official_client(app, monkeypatch):
+    operations, controller, sw, current, writes = setup_operation(app, monkeypatch)
+    target = sw.load_account_slot("2")
+    target["auth"]["tokens"]["access_token"] = token({"exp": 1, "email": "test2@example.test"})
+    sw.write_json_atomic(Path(sw.ACCOUNTS_DIR) / "acc2.json", target)
+    refresh = Mock(return_value=(True, None))
+    monkeypatch.setattr(sw, "refresh_openai_token", refresh)
+    operations.run("codex", "2")
+    refresh.assert_not_called()
+    assert writes == [target["auth"]]
+    controller.stop.assert_called_once()
+    controller.start.assert_called_once()
